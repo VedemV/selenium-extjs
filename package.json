@@ -1,0 +1,14 @@
+{
+  "name": "selenium-extjs",
+  "version": "0.0.0",
+  "description": "ExtJs testing to Selenium",
+  "main": "./index",
+  "scripts": {
+    "test": "mocha -t 600000 --recursive test"
+  },
+  "author": "vedem",
+  "license": "ISC",
+  "dependencies": {
+    "strip-json-comments": "^2.0.1"
+  }
+}
