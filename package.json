@@ -7,6 +7,10 @@
     "test": "mocha -t 600000 --recursive test"
   },
   "author": "vedem",
+  "repository" : { 
+    "type" : "git", 
+    "url" : "https://github.com/VedemV/selenium-extjs.git"
+  },
   "license": "ISC",
   "dependencies": {
     "strip-json-comments": "^2.0.1"
