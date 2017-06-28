@@ -21,6 +21,13 @@ Icon?
 # Модули Node, логи npm
 node_modules
 npm-debug.log
+debug.log
 
 # nbproject
 nbproject
+
+# Файлы результатов тестов
+
+screenshots
+logs
+temp

@@ -4,15 +4,24 @@
   "description": "ExtJs testing to Selenium",
   "main": "./index",
   "scripts": {
-    "test": "mocha -t 600000 --recursive test"
+    "test": "mocha -t 600000 --delay --recursive test/**/test-*",
+    "mocha": "mocha -t 600000 --delay --recursive test/mocha/**/test-*",
+    "selenium": "mocha -t 600000 --delay --recursive test/selenium/**/test-*"
   },
   "author": "vedem",
-  "repository" : { 
-    "type" : "git", 
-    "url" : "https://github.com/VedemV/selenium-extjs.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VedemV/selenium-extjs.git"
   },
   "license": "ISC",
   "dependencies": {
     "strip-json-comments": "^2.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "decache": "^4.1.0",
+    "mocha": "^3.2.0",
+    "selenium-webdriver": "^3.4.0",
+    "sleep-async": "^1.0.1"
   }
 }

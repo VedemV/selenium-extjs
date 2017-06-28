@@ -1,5 +1,7 @@
 # selenium-extjs
-ExtJs testing to Selenium
+
+Testing ExtJs projects on Selenium
 
 
 Package is registered
+

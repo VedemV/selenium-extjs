@@ -1,0 +1,22 @@
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+var date = new Date(2014, 11, 31, 14, 30, 0);
+
+var options = {
+	hour12: false,
+  //era: 'long',
+  //year: 'numeric',
+  //month: 'long',
+  //day: 'numeric',
+ // weekday: 'long',
+  //timezone: 'UTC',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric'
+};
+
+console.log( date.toLocaleString("ru", options) );

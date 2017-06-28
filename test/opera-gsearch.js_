@@ -1,0 +1,162 @@
+'use strict';
+
+const {By, until, Browser, promise} = require('selenium-webdriver');
+const assert = require('selenium-webdriver/testing/assert');
+const test = require('..');
+const { createComponent, ExtComponent, ExtComponentTextField } = require('../lib/ext');
+
+console.log('opera-searsh');
+
+test.suite(function( env ){
+
+	test.describe('111Google Search suite', function() {
+
+		test.it('works with promises', () => {
+			console.warn('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+			console.dir(this.test);
+			//this.skip();
+
+			env.driver.get('http://www.google.com/ncr')
+				.then( _ => env.driver.findElement({name: 'q'}).clear() )
+				.then( _ => env.driver.findElement({name: 'q'}).sendKeys('webdriver') )
+				.then( _ => env.driver.findElement({name: 'btnG'}).click() )
+				.then( _ => env.driver.wait(until.titleIs('webdriver - Google Search'), 1000) );
+		});
+
+		test.it('works with Base Page', () => {
+			let page = new test.BasePage(env, 'http://www.google.com/ncr', {css: 'input[name=q]'});
+			page.visit();
+			page.driver.findElement({name: 'q'}).clear();
+			page.driver.findElement({name: 'q'}).sendKeys('webdriver');
+			page.driver.findElement({name: 'btnG'}).click();
+			page.driver.wait(until.titleIs('webdriver - Google Search'), 1000);
+		});
+		
+	});
+}, {
+	browsers: [
+		Browser.CHROME,
+//		Browser.FIREFOX,
+//		Browser.EDGE,
+//		Browser.IE
+	]
+	//integrity: false
+});
+
+test.suite(function( env ){
+//	let page = null;
+
+	test.describe('VSP ExtPage', function() {
+
+//		before(() => {
+//			page = new test.ExtPage(env, {css: '.x-viewport'}, '/vsp/', 'Ext,Pallada,VSP');
+//			return page.visit();
+//				//.then( page.driver.sleep(2000) );
+//		});
+
+		test.it('login panel', function(){
+			let page = new test.ExtPage(env, '/vsp/', {css: '.x-viewport'}, 'Ext,Pallada,VSP');
+			page.visit()
+				.then( _ => page.driver.wait(until.elementLocated({css: '.x-panel[id*=login]'}), 1000) 
+					.findElement({css: ':focus'})
+					.getAttribute('id') )
+				.then(
+					id => {
+						console.log('Login panel focused element', id);
+						assert(id).contains('textfield', 'Expected contain "textfield"');
+					},
+					console.log
+				);
+		});
+
+		test.it('mochaUI click fields', () => {
+			let page = new test.ExtPage(env, '/vsp/', 'Ext,Pallada,VSP', {css: '.x-viewport'});
+			let panel = null;
+			page.driver.wait(until.elementLocated({css: '.x-panel[id*=login]'}), 1000)
+				.then( form => panel = form.findElement({css: '.x-panel-login'}) )
+				.then( _ => panel.findElement({css: '.x-container .x-box-target .x-field:nth-of-type(1)'}).click() )
+				.then( _ => panel.findElement({css: '.x-container .x-box-target .x-field:nth-of-type(1)'}).click() )
+				.then( _ => panel.findElement({css: '.x-container .x-box-target .x-field:nth-of-type(4)'}).click() )
+				.then( _ => panel.findElement({css: '.x-container .x-box-target .x-field:nth-of-type(6)'}).click() )
+				.then( _ => panel.findElement({css: '.x-container .x-box-target .x-field:nth-of-type(7)'}).click() );
+		});
+	});
+}, {
+	browsers: [
+		//Browser.CHROME
+		//Browser.FIREFOX,
+		//Browser.EDGE,
+		//Browser.IE
+	]
+	//integrity: true
+});
+
+test.suite(function( env ){
+	let page = null;
+
+	test.describe('VSP ExtPage', function() {
+
+		before(() => {
+			page = new test.ExtPage(env, '/vsp/', {css: '.x-viewport'}, 'Ext,Pallada,VSP');
+			return page.visit();
+		});
+
+		test.it('ExtComponent', () => {
+			//let page = new test.ExtPage(env, {css: '.x-viewport'}, '/vsp/', 'Ext,Pallada,VSP');
+			let cmp = new ExtComponent(page.driver);
+			console.log('type', cmp.componentType, 'selector', cmp.selector);
+			page.driver.wait(cmp.conditionLocated(), 1000)
+				.then( _ => cmp.click() )
+				//.then( _ => language.sendKeys('qwerty') )
+				.then( _ => console.log(cmp.offset, cmp.size, cmp.id) );
+			//console.log(cmp.label.offset, cmp.label.size, cmp.label.id);
+			//return language.label.getText().then( console.log );
+		});
+/*
+		test.it('works with generators', function*() {
+			yield driver.get('http://www.google.com/ncr');
+			yield driver.findElement(By.name('q')).clear();
+			yield driver.findElement(By.name('q')).sendKeys('webdriver');
+			yield driver.findElement(By.name('btnG')).click();
+			yield driver.wait(until.titleIs('webdriver - Google Search'), 1000);
+		});
+*/
+	});
+}, {
+	browsers: [
+		//Browser.CHROME
+		//Browser.FIREFOX,
+		//Browser.EDGE,
+		//Browser.IE
+	]
+	//integrity: true
+});
+
+/*
+test.suite(function( env ){
+	let driver = null;
+	before(() => driver = env.driver );
+
+	test.describe('Google Search', function() {
+
+		test.it('works with promises', () =>
+			driver.get('http://www.google.com/ncr')
+				.then(_ => driver.findElement(By.name('q')).clear())
+				.then(_ => driver.findElement(By.name('q')).sendKeys('webdriver'))
+				.then(_ => driver.findElement(By.name('btnG')).click())
+				.then(_ => driver.wait(until.titleIs('webdriver - Google Search'), 1000))
+		);
+
+		test.it('works with generators', function*() {
+			yield driver.get('http://www.google.com/ncr');
+			yield driver.findElement(By.name('q')).clear();
+			yield driver.findElement(By.name('q')).sendKeys('webdriver');
+			yield driver.findElement(By.name('btnG')).click();
+			yield driver.wait(until.titleIs('webdriver - Google Search'), 1000);
+		});
+
+	});
+}, {
+	//integrity: true
+});
+*/
