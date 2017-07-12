@@ -80,7 +80,7 @@ test.suite(function( env ){
 	});
 
 }, {
-	browsers: [
-		Browser.FIREFOX
-	]
+	//browsers: [
+	//	Browser.FIREFOX
+	//]
 });

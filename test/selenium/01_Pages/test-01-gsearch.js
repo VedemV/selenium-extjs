@@ -139,5 +139,5 @@ test.suite(function( env ){
 ////		//Browser.EDGE,
 ////		//Browser.IE
 //	]
-	integrity: false
+	//delay: false
 });
