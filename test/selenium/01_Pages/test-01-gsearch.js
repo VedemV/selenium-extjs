@@ -8,20 +8,23 @@ const { Region, assert } = require(process.cwd()+'/lib/until');
 console.log('=>', __filename);
 
 test.suite(function( env ){
+	// В IE после создания webdriver заголовок - WebDriver,
+	// в остальных - пустая строка
 	let emtyPage = env.currentBrowser() === Browser.IE ? 'WebDriver': '';
 
 	test.describe('BasePage', function() {
 		let page;
 		this.retries(3);
 
-		test.it('empty params', function() {
+		test.it('создание с пустыми параметрами', function() {
 			page = new test.BasePage(env);
-			assert(page.url).equals(test.config.baseurl);
+			
+			assert(page.url).equals(config.baseurl);
 			return assert(page.driver.getTitle()).equals(emtyPage, 'title <> "'+emtyPage+'"')
 				.then(_ => assert(page.positionUI).isNull() );
 		});
 
-		test.it('compares url property', function() {
+		test.it('значения сойства `url`', function() {
 			let saveUrl = test.config.baseurl;
 			page = new test.BasePage(env);
 
@@ -35,7 +38,7 @@ test.suite(function( env ){
 			page.url = 'http://www.google.com/ncr';
 		});
 
-		test.it('compares locator property', function() {
+		test.it('значения сойства `locator`', function() {
 			page = new test.BasePage(env);
 
 			assert(page.locator).deepEqual({ using: 'css selector', value: 'body' });
@@ -60,14 +63,14 @@ test.suite(function( env ){
 				.then(_ => assert(page.positionUI).deepEqual({x:0, y:0}, 'empty: positionUI <> {x:0, y:0}') );
 		});
 
-		test.it('works BasePage and MochaUI with promises', () => {
-			//this.retries(3);
+		test.it('MochaUI с использованием promises вызовов', () => {
 			page = new test.BasePage(env, 'http://www.google.com/ncr', {css: 'input[name=q]'});
 			return page.visit()
 				.then( input => input.click()
 					.then(_ => assert(page.positionUI).isLocatedRegion(Region.regionWebElement(input), 'positionUI not in `input`') )
 					.then(_ => input => input.clear() )
 					.then(_ => input.sendKeys('webdriver') ) )
+					//.then(_ => page.driver.sleep(100) )
 				.then(_ => page.driver.findElement({name: 'btnG'}) )
 					.then( btn => btn.click()
 					.then(_ => assert(page.positionUI).isLocatedRegion(Region.regionWebElement(btn), 'positionUI not in `btnG`')) )
@@ -76,12 +79,11 @@ test.suite(function( env ){
 				.then(_ => page.visit(null) );
 		});
 
-		test.it('works BasePage and MochaUI with generators', function*() {
+		test.it('MochaUI с использованием generators вызовов', function*() {
 			let region;
 			let input;
 			let btn;
 
-			//this.retries(3);
 			page = new test.BasePage(env, 'http://www.google.com/ncr', {css: 'input[name=q]'});
 			yield page.visit();
 
@@ -89,8 +91,6 @@ test.suite(function( env ){
 			region = yield Region.regionWebElement(input);
 			yield input.click();
 			yield assert(page.positionUI).isLocatedRegion(region, 'positionUI not in `input`');
-//			yield input.click();
-//			yield assert(page.positionUI).isLocatedRegion(yield Region.regionWebElement(input), 'positionUI not in `input`');
 			yield input.clear();
 			yield input.sendKeys('webdriver');
 
@@ -104,8 +104,7 @@ test.suite(function( env ){
 			yield page.visit(null);
 		});
 
-		test.it('works BasePage and MochaUI use ControlFlow', () => {
-			//this.retries(3);
+		test.it('MochaUI с использованием ControlFlow', () => {
 			page = new test.BasePage(env, 'http://www.google.com/ncr', {css: 'input[name=q]'});
 			page.visit();
 

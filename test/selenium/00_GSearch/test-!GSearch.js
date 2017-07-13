@@ -26,23 +26,17 @@ test.suite(function( env ){
 				.then( _ => env.driver.findElement({name: 'q'}).sendKeys('webdriver') )
 				.then( _ => env.driver.findElement({name: 'btnG'}).click() )
 				.then( _ => env.driver.wait(until.titleIs('webdriver - Google Search'), 1000) )
-				.then( _ => {
-					if( env.currentBrowser() === 'firefox' ) throw 'Error';
-				})
-				.then(
-					null,
-					e => {
-						let index = config.browsers.indexOf(env.currentBrowser());
-						if( ~index ){
-							config.browsers.splice(index, 1);
-							this.test.title = 'Ошибка при выполнении поиска Google. Браузер '
-								+ env.currentBrowser()
-								+ '`  исключен из тестов.';
-						}
-						this.skip();
-						//throw e;
+				.then( null, e => {
+					let index = config.browsers.indexOf(env.currentBrowser());
+					if( ~index ){
+						config.browsers.splice(index, 1);
+						this.test.title = 'Ошибка при выполнении поиска Google. Браузер '
+							+ env.currentBrowser()
+							+ '`  исключен из тестов.';
 					}
-				);
+					console.error(e);
+					this.skip();
+				});
 		});
 	});
 }, {
