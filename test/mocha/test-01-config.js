@@ -12,7 +12,7 @@ console.log('=>', __filename);
 
 describe('config:', function(){
 	let config = null;
-	this.timeout(60000);
+	//this.timeout(60000);
 
 	describe('the default configuration from the file `./test/config.json`:', function(){
 
@@ -23,12 +23,16 @@ describe('config:', function(){
 			assert.ok(config.timeout);
 		});
 
-		it('value of `timeout` is 600000', () => {
-			assert.equal(config.timeout, 600000);
+		it('value of `timeout` is ' + (this._timeout || 600000), () => {
+			assert.equal(config.timeout, this._timeout || 600000);
 		});
 
 		it('value of `explicit` is 120000', () => {
 			assert.equal(config.explicit, 120000);
+		});
+
+		it('value of `browsers` is [chrome, firefox, edge, ie]', () => {
+			assert.deepEqual(config.browsers, [ 'chrome', 'firefox', 'MicrosoftEdge', 'internet explorer' ]);
 		});
 	});
 
@@ -56,6 +60,10 @@ describe('config:', function(){
 		it('value of `explicit` is the default value (1000)', () => {
 			assert.equal(config.explicit, 1000);
 		});
+
+		it('value of `browsers` is the default value (firefox)', () => {
+			assert.deepEqual(config.browsers, [ 'firefox' ]);
+		});
 	});
 
 	describe('configuration file not found, default values used', function(){
@@ -71,12 +79,15 @@ describe('config:', function(){
 		});
 
 		it('Value `timeout` is defined on the command line', () => {
-			console.log(config.timeout);
 			assert.ok(config.timeout);
 		});
 
 		it('value of `explicit` is the default value (1000)', () => {
 			assert.equal(config.explicit, 1000);
+		});
+
+		it('value of `browsers` is the default value (firefox)', () => {
+			assert.deepEqual(config.browsers, [ 'firefox' ]);
 		});
 	});
 });

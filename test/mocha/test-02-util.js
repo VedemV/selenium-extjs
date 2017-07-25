@@ -109,6 +109,7 @@ describe('util', function(){
 					.matches(/[\/\\]screenshots[\/\\]testname_\d{17}\.png/)
 		);
 	});
+
 	describe('accessPromise', function(){
 
 		it('failed new folder', () => {
@@ -121,6 +122,7 @@ describe('util', function(){
 		});
 
 		it('success for an existing folder', () => {
+			// TODO: предусмотреть сосздание папки перед тестом
 			let path = Path.dirname(util.resolveScreenshot('chrome'));
 
 			return util.accessPromise(path)
