@@ -70,7 +70,6 @@ test.suite(function( env ){
 					.then(_ => assert(page.positionUI).isLocatedRegion(Region.regionWebElement(input), 'positionUI not in `input`') )
 					.then(_ => input => input.clear() )
 					.then(_ => input.sendKeys('webdriver') ) )
-					//.then(_ => page.driver.sleep(100) )
 				.then(_ => page.driver.findElement({name: 'btnG'}) )
 					.then( btn => btn.click()
 					.then(_ => assert(page.positionUI).isLocatedRegion(Region.regionWebElement(btn), 'positionUI not in `btnG`')) )
@@ -131,12 +130,4 @@ test.suite(function( env ){
 
 	});
 	
-}, {
-//	browsers: [
-//		//Browser.CHROME,
-//		Browser.FIREFOX,
-////		//Browser.EDGE,
-////		//Browser.IE
-//	]
-	//delay: false
 });
