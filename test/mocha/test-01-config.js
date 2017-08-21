@@ -1,7 +1,4 @@
 
-
-
-
 'use strict';
 
 const decache = require('decache');
@@ -13,6 +10,11 @@ console.log('=>', __filename);
 describe('config:', function(){
 	let config = null;
 	//this.timeout(60000);
+	
+	after(() => {
+		decache(configJs);
+		config = require(configJs);
+	});
 
 	describe('the default configuration from the file `./test/config.json`:', function(){
 
@@ -23,8 +25,8 @@ describe('config:', function(){
 			assert.ok(config.timeout);
 		});
 
-		it('value of `timeout` is ' + (this._timeout || 600000), () => {
-			assert.equal(config.timeout, this._timeout || 600000);
+		it('value of `timeout` is 100000', () => {
+			assert.equal(config.timeout, 100000);
 		});
 
 		it('value of `explicit` is 120000', () => {

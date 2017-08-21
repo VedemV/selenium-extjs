@@ -4,7 +4,7 @@
 
 'use strict';
 
-const config = require('../../lib/config');
+const config = require(process.cwd()+'/lib/config');
 const { Browser, promise } = require('selenium-webdriver');
 const fs = require('fs');
 const Path = require('path');
@@ -95,9 +95,11 @@ describe('util', function(){
 		);
 
 		it('timestamp name for chrome whith used path from config params, extention default',
-			() => assert(util.resolveScreenshot('chrome'))
-					.matches(/[\/\\]screenshots[\/\\]chrome[\/\\]\d{17}\.png/)
-		);
+			() => {
+				console.log(util.resolveScreenshot('chrome'));
+				assert(util.resolveScreenshot('chrome'))
+				.matches(/[\/\\]screenshots[\/\\]chrome[\/\\]\d{17}\.png/)
+		});
 
 		it('timestamp name whith used path from config params, extention default',
 			() => assert(util.resolveScreenshot())

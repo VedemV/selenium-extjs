@@ -7,7 +7,7 @@ const {assert} = require(process.cwd()+'/lib/until');
 //const util = require(process.cwd()+'/lib/util');
 //const { ExtComponent, ExtComponentTextField } = require(process.cwd()+'/lib/ext');
 
-const url = 'http://examples.sencha.com/extjs/6.2.0/examples/kitchensink/#form-fieldtypes';
+const url = '#form-fieldtypes';
 
 console.log('=>', __filename);
 
@@ -89,7 +89,7 @@ test.suite(function( env ){
 	});
 
 }, {
-	browsers: [
-		Browser.FIREFOX
-	]
+//	browsers: [
+//		Browser.FIREFOX
+//	]
 });

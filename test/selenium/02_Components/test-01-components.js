@@ -1,111 +1,112 @@
 'use strict';
 
-const {WebElement, By, until, Browser} = require('selenium-webdriver');
-const test = require(process.cwd()+'');
+const { Browser, WebElement } = require('selenium-webdriver');
+const config = require(process.cwd()+'/lib/config');
+
+const {suite, before, after, describe, it, ignore} = require(process.cwd()+'');
 const {ExtPage} = require(process.cwd()+'/lib/pages');
-const { ExtComponent, ExtComponentTextField } = require(process.cwd()+'/lib/ext');
-const {assert} = require(process.cwd()+'/lib/until');
-const util = require(process.cwd()+'/lib/util');
+const assert = require(process.cwd()+'/lib/until/assert');
+
+const ExtComponent = require(process.cwd()+'/lib/ext/component');
 
 console.log('=>', __filename);
 
-test.suite(function( env ){
+suite(function( env ){
 
 	let page = null;
-	let url = 'http://examples.sencha.com/extjs/6.2.0/examples/kitchensink/#form-fieldtypes';
+	let pageSize;
 
+	before( function*(){
+		if( !env.driver ){
+			this.skip();
+			return;
+		}
+		if( env.currentBrowser() === Browser.CHROME ){
+			yield env.driver.manage().window().maximize();
+		}
+		pageSize = yield env.driver.manage().window().getSize();
+	});
 
-	test.describe('ExtComponent`s', function() {
+	describe('Component', function(){
 		this.retries(3);
 
-		before( () =>{
-			page = new ExtPage(env, url);
-			if(env.currentBrowser() === Browser.FIREFOX) page.empty();
-			return page.visit();
-		});
+		describe('app header', function(){
+			let el;
 
-		test.describe('compare default properties', function() {
-			let cmp = null;
-			before( () => page && (cmp = new ExtComponent(page.driver) ) );
-
-			it('componentType = `component`', function(){
-				return assert(cmp.componentType).isEqualTo('component');
-			});
-			it('defaultSelector = { css: \'div.x-component[id^="component"]\' }', function(){
-				return assert(cmp.defaultSelector).deepEqual({ css: 'div.x-component[id^="component"]' });
-			});
-			it('selector = { css: \'div.x-component[id^="component"]\' }', function(){
-				return assert(cmp.selector).deepEqual({ css: 'div.x-component[id^="component"]' });
-			});
-			it('there is no component with default properties on the page', function(){
-				return assert(cmp.locateElement()).isNull();
-			});
-			it('new value of selector = { css: \'div.x-component\' }', function(){
-				cmp.selector = { css: 'div.x-component' };
-				return assert(cmp.selector).deepEqual({ css: 'div.x-component' });
-			});
-		});
-
-		test.describe('getting WebElement', function() {
-			let cmp = null;
-			before( () => page && (cmp = new ExtComponent(page.driver)) );
-		
-			it('3 items found by selector { css: \'div.x-component\' }', function(){
-				cmp.selector = { css: 'div.x-component' };
-				return assert(page.driver.findElements(cmp.selector).then( entries => entries.length )).isEqualTo(3);
+			before( () => {
+				//if( !env.driver ) return;
+				page = new ExtPage(env, '#form-register', {css: '#app-header-title'});
+				return page.driver.get(config.baseurl + '#')
+					.then(_ => page.visit() )
+					.then(_ => el = ExtComponent.byLocator(env.driver, {css: '#app-header'}) );
 			});
 
-			it('element was found using selector and index', function(){
-				cmp.selector = { css: 'div.x-component' };
-				cmp.index = 1;
-				return assert(cmp.locateElement()).instanceOf(WebElement);
+			it('instance ExtComponent', function(){
+				return assert(el).instanceOf(ExtComponent);
 			});
 
-			it('element was obtained using selector and index', function(){
-				cmp.selector = { css: 'div.x-component' };
-				cmp.index = 1;
-				return assert(cmp.getComponent()).instanceOf(WebElement);
+			it('id equals app-header', function(){
+				return assert(el.id).equals('app-header');
 			});
 
-			it('element not received using selector and bad index', function(){
-				cmp.selector = { css: 'div.x-component' };
-				cmp.index = 3;
-				return assert(cmp.getComponent()).isNull();
+			it('is visibled', function(){
+				return assert(el.isVisibled()).isTrue();
 			});
 
-			it('element properties with id = `app-header-title` using selector and index', function(){
-				cmp.selector = { css: 'div.x-component' };
-				cmp.index = 1;
-				return cmp.getComponent()
-					.then( _ => assert(cmp._id).isEqualTo('app-header-title') )
-					.then( _ => page.driver.manage().window().getSize() )
-					.then( size => assert(cmp.region.width).closeTo(size.width-100, 50) );
+			it('is not focused', function(){
+				return assert(el.isFocused()).isFalse();
 			});
 
-			it('getting from an empty htmlElement with an element search by id', function(){
-				cmp = new ExtComponent(page.driver, 0, {css: '#app-header-title'});
-				return assert(cmp.id).isEqualTo('app-header-title');
-			});
-
-			it('Clicking an element', function(){
-				cmp = new ExtComponent(page.driver, null, { css: '#app-header-title' });
-				cmp.htmlElement.click();
-				return cmp.click();
-			});
-
-			it('Clicking an element (generators)', function*(){
-				cmp = yield new ExtComponent(page.driver, null, { css: '#app-header-title' });
-				return yield cmp.htmlElement.click();
+			it('width page width', function(){
+				return assert(el.location.width).closeTo(pageSize.width, 20);
 			});
 
 		});
 
+		describe('app header title', function(){
+			let el;
 
+			before( () => {
+				page = new ExtPage(env, '#form-register', {css: '#app-header-title'});
+				return page.driver.get(config.baseurl + '#')
+					.then(_ => page.visit() )
+					.then(_ => el = ExtComponent.byLocator(env.driver, {css: '#app-header-title'}) );
+			});
+
+			it('instance ExtComponent', function(){
+				return assert(el).instanceOf(ExtComponent);
+			});
+
+			it('id equals app-header', function(){
+				return assert(el.id).equals('app-header-title');
+			});
+
+			it('is visibled', function(){
+				return assert(el.isVisibled()).isTrue();
+			});
+			it('is not focused', function(){
+				return assert(el.isFocused()).isFalse();
+			});
+
+			it('verifying width', function(){
+				return assert(el.location.width).closeTo(pageSize.width-100, 20);
+			});
+
+			it('text is `Ext JS Kitchen Sink`', function(){
+				return assert(el.getAttribute('innerText')).equals('Ext JS Kitchen Sink');
+			});
+
+			it('execute script', function*(){
+				var text = yield el.executeScript('this.update("Test Selenium Webdriver");return this.el.dom.innerText;');
+				yield assert(text).equals('Test Selenium Webdriver');
+			});
+
+		});
 	});
 
 }, {
 //	browsers: [
-//		Browser.IE
+//		Browser.CHROME
 //	]
 });
 

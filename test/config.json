@@ -19,11 +19,30 @@
 		"ie"
 	],
 	
+	"capabilities": {
+		"*": {
+			"acceptSslCerts": true,
+			"nativeEvents": true,
+			"takesScreenshot": true,
+			"loggingPrefs": {"browser": "ALL"}
+		},
+		"firefox": {
+			"marionette": true
+		},
+		"ie": {
+			"requireWindowFocus": true
+		},
+		"edge": {
+		},
+		"chrome": {
+		}
+	},
+	
 	/**
 	 * Время ожидания выполнения тестов.
 	 * Может быть установлено параметром запуска --timeout
 	 */
-	"timeout": 60000,
+	"timeout": 100000,
 	
 	/**
 	 * Время ожидания загрузки страницы.
@@ -44,7 +63,8 @@
 	/**
 	 *
 	 */
-	"baseurl": "http://pallada.lc/",
+	//"baseurl": "http://pallada.lc/",
+	"baseurl": "http://examples.sencha.com/extjs/6.2.0/examples/kitchensink/",
 	
 	/**
 	 *
