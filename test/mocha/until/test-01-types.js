@@ -14,6 +14,7 @@ console.log('=>', __filename);
 describe('until.types:', function(){
 
 	describe('trueType', function(){
+
 		it('undefined type of undefined', () => {
 			assertEqual(types.trueType(undefined), 'undefined');
 		});
@@ -46,8 +47,8 @@ describe('until.types:', function(){
 			assertEqual(types.trueType(''), 'string');
 		});
 
-		it('object type of Date', () => {
-			assertEqual(types.trueType(new Date()), 'object');
+		it('date type of Date', () => {
+			assertEqual(types.trueType(new Date()), 'date');
 		});
 
 		it('object type of {}', () => {
@@ -81,6 +82,7 @@ describe('until.types:', function(){
 	});
 
 	describe('checkType', function(){
+
 		it('the result of verification undefined as `undefined` -> undefined', () => {
 			assertEqual(types.checkType(undefined, 'undefined'), undefined);
 		});
@@ -114,9 +116,21 @@ describe('until.types:', function(){
 			);
 		});
 
+		it('the result of verification Date as `date` -> Date', () => {
+			assertDeepEqual(types.checkType(new Date('01/01/2000'), 'date'), new Date('01/01/2000'));
+		});
+
+		it('TypeError after check Date as `object`', () => {
+			assertThrows(
+				() => types.checkType(new Date(), 'object'),
+				TypeError
+			);
+		});
+
 	});
 
 	describe('checkNumber', function(){
+
 		it('1 -> 1', () => {
 			assertEqual(types.checkNumber(1), 1);
 		});
@@ -141,6 +155,7 @@ describe('until.types:', function(){
 	});
 
 	describe('isNumber', function(){
+
 		it('valid for value 1', () => {
 			assertTrue(types.isNumber(1));
 		});
@@ -186,6 +201,7 @@ describe('until.types:', function(){
 	});
 
 	describe('checkString', function(){
+
 		it('"test" -> "test"', () => {
 			assertEqual(types.checkString('test'), 'test');
 		});
@@ -199,6 +215,7 @@ describe('until.types:', function(){
 	});
 
 	describe('isString', function(){
+
 		it('valid for "1"', () => {
 			assertTrue(types.isString('1'));
 		});
@@ -208,6 +225,7 @@ describe('until.types:', function(){
 	});
 
 	describe('checkObject', function(){
+
 		it('{ b: 1 } -> { b: 1 }', () => {
 			assertDeepEqual(types.checkObject({ b: 1 }), { b: 1 });
 		});
@@ -221,18 +239,30 @@ describe('until.types:', function(){
 	});
 
 	describe('isObject', function(){
+
 		it('valid for { b: 1 }', () => {
 			assertTrue(types.isObject({ b: 1 }));
-		});
-		it('valid for `new Date()`', () => {
-			assertTrue(types.isObject(new Date()));
 		});
 		it('fails if given a non-object value', () => {
 			assertError(types.isObject(1));
 		});
+		it('fails if given a `new Date()` value', () => {
+			assertError(types.isObject(new Date()));
+		});
+	});
+
+	describe('isDate', function(){
+
+		it('valid for `new Date()`', () => {
+			assertTrue(types.isDate(new Date()));
+		});
+		it('fails if given a object value', () => {
+			assertError(types.isDate({ b: 1 }));
+		});
 	});
 
 	describe('evaluate', function(){
+		
 		it('valid for primitive bound', () => {
 			return types.evaluate(
 				true,

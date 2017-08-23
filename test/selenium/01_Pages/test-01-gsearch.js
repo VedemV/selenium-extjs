@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require(process.cwd()+'/lib/config');
-const {By, until, Browser} = require('selenium-webdriver');
+const {By, until, Browser, WebElement} = require('selenium-webdriver');
 const test = require(process.cwd()+'');
 const { Region, assert } = require(process.cwd()+'/lib/until');
 
@@ -49,12 +49,11 @@ test.suite(function( env ){
 		});
 
 		test.it('visit', function() {
-
 			page = new test.BasePage( env, 'http://www.google.com/ncr', {name: 'q'} );
+
 			assert(page.url).equals('http://www.google.com/ncr');
 			
-			return assert(page.driver.getTitle()).equals(emtyPage, 'initialize: title <> "'+emtyPage+'"')
-				.then(_ => page.visit() )
+			return page.visit()
 				.then(_ => assert(page.driver.getTitle()).equals('Google', 'title <> "Google"') )
 				.then(_ => assert(page.positionUI).deepEqual({x:0, y:0}, 'Google: positionUI <> {x:0, y:0}') )
 				.then(_ => page.locator = {css: 'body'} )
@@ -65,7 +64,9 @@ test.suite(function( env ){
 
 		test.it('MochaUI с использованием promises вызовов', () => {
 			page = new test.BasePage(env, 'http://www.google.com/ncr', {css: 'input[name=q]'});
+
 			return page.visit()
+				.then( _ => page.driver.findElement({css: 'input[name=q]'}) )
 				.then( input => input.click()
 					.then(_ => assert(page.positionUI).isLocatedRegion(Region.regionWebElement(input), 'positionUI not in `input`') )
 					.then(_ => input => input.clear() )
@@ -85,6 +86,7 @@ test.suite(function( env ){
 			let btn;
 
 			page = new test.BasePage(env, 'http://www.google.com/ncr', {css: 'input[name=q]'});
+
 			yield page.visit();
 
 			input = yield page.driver.findElement(By.name('q'));
@@ -107,6 +109,7 @@ test.suite(function( env ){
 
 		test.it('MochaUI с использованием ControlFlow', () => {
 			page = new test.BasePage(env, 'http://www.google.com/ncr', {css: 'input[name=q]'});
+
 			page.visit();
 
 			let input = page.driver.findElement({name: 'q'});
@@ -130,7 +133,32 @@ test.suite(function( env ){
 			page.locator = {css: 'body'};
 			page.visit(null);
 		});
+	});
 
+	test.describe('reget url', function() {
+		let page;
+
+		before( () => page = new test.BasePage(env, 'https://www.google.com/?gws_rd=ssl', {css: 'input[name=q]'}) );
+
+		it('get page', function(){
+			return page.visit()
+				.then( _ => page.driver.findElement({css: 'input[name=q]'}) )
+				.then( input => assert(input).instanceOf(WebElement) );
+		});
+
+		it('reget page', function(){
+			return page.visit()
+				.then( _ => page.driver.findElement({css: 'input[name=q]'}) )
+				.then( input => assert(input).instanceOf(WebElement) );
+		});
+		
+		it('reget page', function(){
+			return page.visit()
+				.then( _ => page.driver.findElement({css: 'input[name=q]'}) )
+				.then( input => assert(input).instanceOf(WebElement) );
+		});
 	});
 	
+},{
+	//browsers: 'chrome'
 });

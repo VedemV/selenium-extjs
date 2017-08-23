@@ -95,11 +95,9 @@ describe('util', function(){
 		);
 
 		it('timestamp name for chrome whith used path from config params, extention default',
-			() => {
-				console.log(util.resolveScreenshot('chrome'));
-				assert(util.resolveScreenshot('chrome'))
+			() => assert(util.resolveScreenshot('chrome'))
 				.matches(/[\/\\]screenshots[\/\\]chrome[\/\\]\d{17}\.png/)
-		});
+		);
 
 		it('timestamp name whith used path from config params, extention default',
 			() => assert(util.resolveScreenshot())
