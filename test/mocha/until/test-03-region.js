@@ -109,7 +109,7 @@ describe('until.region', function(){
 
 		let driver;
 		
-		this.timeout(60000);
+		this.timeout(100000);
 		this.retries(3);
 
 		before( function(){
